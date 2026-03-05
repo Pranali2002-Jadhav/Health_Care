@@ -5,11 +5,14 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'your-secret-key-here'
+#SECRET_KEY = 'your-secret-key-here'
 
-DEBUG = True
+#DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['*']
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-key")
+DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+ALLOWED_HOSTS = [".onrender.com", "localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -30,6 +33,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # ✅ add this
 ]
 
 ROOT_URLCONF = 'health_project.urls'
@@ -75,6 +79,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
